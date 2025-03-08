@@ -37,6 +37,16 @@ function BoardPage() {
     status: "Backlog",
   });
 
+  const [deleteMode, setDeleteMode] = useState(false);
+
+  const handleToggleDeleteMode = () => {
+    setDeleteMode((prev) => !prev);
+  };
+
+  const handleDeleteNote = (id) => {
+    setNotes((prevNotes) => prevNotes.filter((note) => note.id !== id));
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewNote((prev) => ({
@@ -97,7 +107,11 @@ function BoardPage() {
             <button type="submit">AddNote</button>
           </form>
         </div>
-        <div className="w-1/5"></div>
+        <div className="w-1/5">
+          <button onClick={handleToggleDeleteMode} className=" p-2 border-2">
+            {deleteMode ? "Exit Delete Mode" : "Enter Delete Mode"}
+          </button>
+        </div>
         <div className="w-1/5"></div>
         <div className="w-1/5"></div>
       </div>
@@ -109,7 +123,15 @@ function BoardPage() {
             {notes
               .filter((note) => note.status === column)
               .map((note) => (
-                <div className="border-2 m-2" key={note.id}>
+                <div className="border-2 m-2 flex flex-col" key={note.id}>
+                  {deleteMode && (
+                    <button
+                      className="self-center m-2 w-1/2 border-2 text-red-500 font-bold"
+                      onClick={() => handleDeleteNote(note.id)}
+                    >
+                      DELETE NOTE
+                    </button>
+                  )}
                   <h3>{note.title}</h3>
                   <p>{note.description}</p>
                 </div>
