@@ -1,35 +1,11 @@
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useParams, Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 function BoardPage() {
-  const [board] = useState({
-    id: 1,
-    columns: ["Backlog", "In Progress", "Review", "Done"],
-  });
+  const { boardId } = useParams();
+  const [board, setBoard] = useState(null);
 
-  const [notes, setNotes] = useState([
-    {
-      id: 1,
-      title: "Welcome Note",
-      description: "Welcome to My-Kanban-Board",
-      status: "Backlog",
-      boardId: 1,
-    },
-    {
-      id: 2,
-      title: "How to use:",
-      description: "...some instruction",
-      status: "In Progress",
-      boardId: 1,
-    },
-    {
-      id: 3,
-      title: "Other Infos",
-      description: "...some instruction",
-      status: "In Progress",
-      boardId: 1,
-    },
-  ]);
+  const [notes, setNotes] = useState([]);
 
   const [newNote, setNewNote] = useState({
     title: "",
@@ -41,15 +17,36 @@ function BoardPage() {
 
   const [changeStatusMode, setChangeStatusMode] = useState(false);
 
+  useEffect(() => {
+    const savedBoards = JSON.parse(localStorage.getItem("boards")) || [];
+    const boardData = savedBoards.find(
+      (board) => board.id === parseInt(boardId)
+    );
+    if (boardData) {
+      setBoard(boardData);
+      setNotes(boardData.notes);
+    }
+  }, [boardId]);
+
+  if (!board) {
+    return <div>Loading...</div>; // Zeigt "Loading..." an, bis das Board geladen ist
+  }
+
   const handleToggleChangeColumnMode = () => {
     setChangeStatusMode((prev) => !prev);
     setDeleteMode(false);
   };
 
   const handleChangeStatus = (id, status) => {
-    setNotes((prevNotes) =>
-      prevNotes.map((note) => (note.id === id ? { ...note, status } : note))
+    const updatedNotes = notes.map((note) =>
+      note.id === id ? { ...note, status } : note
     );
+    setNotes(updatedNotes);
+    const savedBoards = JSON.parse(localStorage.getItem("boards")) || [];
+    const updatedBoard = savedBoards.map((b) =>
+      b.id === board.id ? { ...b, notes: updatedNotes } : b
+    );
+    localStorage.setItem("boards", JSON.stringify(updatedBoard));
   };
 
   const handleToggleDeleteMode = () => {
@@ -58,7 +55,13 @@ function BoardPage() {
   };
 
   const handleDeleteNote = (id) => {
-    setNotes((prevNotes) => prevNotes.filter((note) => note.id !== id));
+    const updatedNotes = notes.filter((note) => note.id !== id);
+    setNotes(updatedNotes);
+    const savedBoards = JSON.parse(localStorage.getItem("boards")) || [];
+    const updatedBoard = savedBoards.map((b) =>
+      b.id === board.id ? { ...b, notes: updatedNotes } : b
+    );
+    localStorage.setItem("boards", JSON.stringify(updatedBoard));
   };
 
   const handleInputChange = (e) => {
@@ -76,8 +79,15 @@ function BoardPage() {
       id: notes.length + 1,
       boardId: board.id,
     };
-    setNotes((prevNotes) => [...prevNotes, newNoteObj]);
+    const updatedNotes = [...notes, newNoteObj];
+    setNotes(updatedNotes);
     setNewNote({ title: "", description: "", status: "Backlog" });
+
+    const savedBoards = JSON.parse(localStorage.getItem("boards")) || [];
+    const updatedBoard = savedBoards.map((b) =>
+      b.id === board.id ? { ...b, notes: updatedNotes } : b
+    );
+    localStorage.setItem("boards", JSON.stringify(updatedBoard));
   };
   return (
     <div>
