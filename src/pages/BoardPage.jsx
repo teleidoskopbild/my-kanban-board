@@ -39,6 +39,18 @@ function BoardPage() {
 
   const [deleteMode, setDeleteMode] = useState(false);
 
+  const [changeStatusMode, setChangeStatusMode] = useState(false);
+
+  const handleToggleChangeColumnMode = () => {
+    setChangeStatusMode((prev) => !prev);
+  };
+
+  const handleChangeStatus = (id, status) => {
+    setNotes((prevNotes) =>
+      prevNotes.map((note) => (note.id === id ? { ...note, status } : note))
+    );
+  };
+
   const handleToggleDeleteMode = () => {
     setDeleteMode((prev) => !prev);
   };
@@ -111,6 +123,14 @@ function BoardPage() {
           <button onClick={handleToggleDeleteMode} className=" p-2 border-2">
             {deleteMode ? "Exit Delete Mode" : "Enter Delete Mode"}
           </button>
+          <button
+            onClick={handleToggleChangeColumnMode}
+            className=" p-2 border-2"
+          >
+            {changeStatusMode
+              ? "Exit Change Status Mode"
+              : "Enter Change Status Mode"}
+          </button>
         </div>
         <div className="w-1/5"></div>
         <div className="w-1/5"></div>
@@ -131,6 +151,20 @@ function BoardPage() {
                     >
                       DELETE NOTE
                     </button>
+                  )}
+                  {changeStatusMode && (
+                    <select
+                      value={note.status}
+                      onChange={(e) =>
+                        handleChangeStatus(note.id, e.target.value)
+                      }
+                    >
+                      {board.columns.map((column) => (
+                        <option key={column} value={column}>
+                          {column}
+                        </option>
+                      ))}
+                    </select>
                   )}
                   <h3>{note.title}</h3>
                   <p>{note.description}</p>
