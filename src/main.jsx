@@ -12,7 +12,7 @@ const router = createHashRouter([
     element: <StartPage></StartPage>,
   },
   {
-    path: "/board",
+    path: "/board/:boardId",
     element: <BoardPage></BoardPage>,
   },
 ]);
