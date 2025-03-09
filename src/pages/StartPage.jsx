@@ -23,6 +23,11 @@ function StartPage() {
     localStorage.setItem("boards", JSON.stringify(updatedBoards));
     setNewBoardName("");
   };
+  const handleDeleteBoard = (id) => {
+    const updatedBoards = boards.filter((board) => board.id !== id);
+    setBoards(updatedBoards);
+    localStorage.setItem("boards", JSON.stringify(updatedBoards));
+  };
   return (
     <div>
       <h1>Start Page</h1>
@@ -32,6 +37,9 @@ function StartPage() {
           {boards.map((board) => (
             <li key={board.id}>
               <Link to={`/board/${board.id}`}>{board.name}</Link>
+              <button onClick={() => handleDeleteBoard(board.id)}>
+                Delete Board
+              </button>
             </li>
           ))}
         </ul>
