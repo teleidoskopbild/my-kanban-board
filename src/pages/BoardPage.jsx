@@ -43,6 +43,7 @@ function BoardPage() {
 
   const handleToggleChangeColumnMode = () => {
     setChangeStatusMode((prev) => !prev);
+    setDeleteMode(false);
   };
 
   const handleChangeStatus = (id, status) => {
@@ -53,6 +54,7 @@ function BoardPage() {
 
   const handleToggleDeleteMode = () => {
     setDeleteMode((prev) => !prev);
+    setChangeStatusMode(false);
   };
 
   const handleDeleteNote = (id) => {
@@ -125,7 +127,7 @@ function BoardPage() {
           </button>
           <button
             onClick={handleToggleChangeColumnMode}
-            className=" p-2 border-2"
+            className="mt-2 p-2 border-2"
           >
             {changeStatusMode
               ? "Exit Change Status Mode"
