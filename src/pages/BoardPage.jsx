@@ -185,16 +185,22 @@ function BoardPage() {
                   )}
                   {changeStatusMode && (
                     <select
+                      className="mb-2 -ml-1 border-1"
                       value={note.status}
                       onChange={(e) =>
                         handleChangeStatus(note.id, e.target.value)
                       }
                     >
-                      {board.columns.map((column) => (
-                        <option key={column} value={column}>
-                          {column}
-                        </option>
-                      ))}
+                      <option value="" selected>
+                        Change Status
+                      </option>
+                      {board.columns
+                        .filter((column) => column !== note.status)
+                        .map((column) => (
+                          <option key={column} value={column}>
+                            {column}
+                          </option>
+                        ))}
                     </select>
                   )}
                   <h3 className="font-bold mb-2">{note.title}</h3>
