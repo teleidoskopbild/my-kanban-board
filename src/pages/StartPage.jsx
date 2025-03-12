@@ -36,11 +36,23 @@ function StartPage() {
     localStorage.setItem("boards", JSON.stringify(updatedBoards));
   };
   return (
-    <div className="flex flex-col items-center bg-gray-200 text-gray-900 w-full h-screen p-4">
+    <div className="flex flex-col items-center bg-gray-200 text-gray-900 w-full h-screen p-4 justify-center">
       <h1 className="text-3xl font-bold mt-4">MY KANBAN BOARD</h1>
-
+      <p className="text-lg mt-2">
+        Organize your tasks efficiently with personalized boards.
+      </p>
       <div className="mt-6 w-full max-w-md bg-gray-400 p-4 rounded-lg shadow-lg">
-        <h2 className="text-xl font-semibold">YOUR EXISTING BOARDS</h2>
+        <h2 className="text-xl text-center font-semibold">
+          YOUR EXISTING BOARDS
+        </h2>
+        <p className="text-sm mt-1 text-center">
+          Here are your current boards. Click a name to open it.
+        </p>
+        {boards.length === 0 && (
+          <p className="text-sm text-gray-700 mt-2 text-center">
+            You haven't created any boards yet. Start your first board now!
+          </p>
+        )}
         <ul className="mt-4 space-y-2">
           {boards.map((board) => (
             <li
@@ -63,9 +75,11 @@ function StartPage() {
           ))}
         </ul>
       </div>
-
       <div className="mt-6 w-full max-w-md bg-gray-400 p-4 rounded-lg shadow-lg">
-        <h2 className="text-xl font-semibold">Create New Board</h2>
+        <h2 className="text-xl font-semibold text-center">Create New Board</h2>
+        <p className="text-sm mt-1 text-center">
+          Enter a name and create a new board for your tasks.
+        </p>
         <div className="mt-4 flex gap-2">
           <input
             type="text"
@@ -81,6 +95,10 @@ function StartPage() {
           </button>
         </div>
       </div>
+      <p className="text-sm text-gray-700 mt-6">
+        All data is stored locally. Your boards will be available next time you
+        open the app.
+      </p>{" "}
     </div>
   );
 }
