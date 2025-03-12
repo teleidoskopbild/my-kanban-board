@@ -3,3 +3,8 @@
   border: solid black 1px;
   margin: 4px;
 } */
+
+.scrollCol::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}

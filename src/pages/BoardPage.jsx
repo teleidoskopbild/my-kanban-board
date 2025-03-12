@@ -115,21 +115,22 @@ function BoardPage() {
             : "Enter Change Status Mode"}
         </button>
       </div>
-      <div className="mb-4 mt-auto flex justify-start">
+      <div className="relative mb-4 mt-auto flex justify-start">
         {board.columns.map((column) => (
           <div
-            className="overflow-y-auto flex-shrink-0 m-2 rounded-lg flex flex-col bg-gray-400 w-80 h-[80vh]"
+            className="scrollCol overflow-y-auto flex-shrink-0 m-2 rounded-lg flex flex-col bg-gray-400 w-80 h-[80vh]"
             key={column}
           >
             {activeColumn === column && (
-              <div className="sticky top-0 z-10">
+              <div className="absolute w-80 bottom-0 z-10">
                 <form
                   onSubmit={handleAddNote}
-                  className="bg-gray-300 p-6 w-full max-w-md"
+                  className="flex flex-col justify-end bg-gray-300 p-6 w-full max-w-md rounded-b-lg"
                 >
-                  <div>
+                  <div className="">
                     <label>Title:</label>
                     <input
+                      autoFocus
                       type="text"
                       name="title"
                       value={newNote.title}
@@ -154,7 +155,14 @@ function BoardPage() {
                       Add Note
                     </button>
                     <button
-                      onClick={() => setActiveColumn(null)}
+                      onClick={() => {
+                        setActiveColumn(null);
+                        setNewNote({
+                          title: "",
+                          description: "",
+                          status: "Backlog",
+                        });
+                      }}
                       className="w-1/3 ml-4 bg-blue-500 text-white p-2 mt-2"
                     >
                       Cancel
@@ -172,12 +180,12 @@ function BoardPage() {
               .filter((note) => note.status === column)
               .map((note) => (
                 <div
-                  className=" self-center rounded-md w-7/8 bg-gray-200 text-gray-700 m-2 p-4 flex flex-col"
+                  className=" self-center rounded-md w-8/9 bg-gray-200 text-gray-700 m-2 p-4 flex flex-col"
                   key={note.id}
                 >
                   {deleteMode && (
                     <button
-                      className="self-center m-2 rounded-lg bg-red-200 text-red-500 font-bold"
+                      className="self-center p-3 m-2 rounded-lg bg-red-200 text-red-500 font-bold"
                       onClick={() => handleDeleteNote(note.id)}
                     >
                       DELETE NOTE
