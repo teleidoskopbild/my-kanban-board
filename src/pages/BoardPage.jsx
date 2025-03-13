@@ -1,18 +1,19 @@
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import Column from "../components/Column.jsx";
 
 function BoardPage() {
   const { boardId } = useParams();
   const [board, setBoard] = useState(null);
   const [notes, setNotes] = useState([]);
+  const [activeColumn, setActiveColumn] = useState(null);
+  const [deleteMode, setDeleteMode] = useState(false);
+  const [changeStatusMode, setChangeStatusMode] = useState(false);
   const [newNote, setNewNote] = useState({
     title: "",
     description: "",
     status: "",
   });
-  const [activeColumn, setActiveColumn] = useState(null);
-  const [deleteMode, setDeleteMode] = useState(false);
-  const [changeStatusMode, setChangeStatusMode] = useState(false);
 
   useEffect(() => {
     const savedBoards = JSON.parse(localStorage.getItem("boards")) || [];
@@ -66,32 +67,6 @@ function BoardPage() {
     localStorage.setItem("boards", JSON.stringify(updatedBoard));
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setNewNote((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleAddNote = (e) => {
-    e.preventDefault();
-    const newNoteObj = {
-      ...newNote,
-      id: notes.length + 1,
-      boardId: board.id,
-    };
-    const updatedNotes = [...notes, newNoteObj];
-    setNotes(updatedNotes);
-    setNewNote({ title: "", description: "", status: "Backlog" });
-
-    const savedBoards = JSON.parse(localStorage.getItem("boards")) || [];
-    const updatedBoard = savedBoards.map((b) =>
-      b.id === board.id ? { ...b, notes: updatedNotes } : b
-    );
-    localStorage.setItem("boards", JSON.stringify(updatedBoard));
-    setActiveColumn(null);
-  };
   return (
     <div className="flex flex-col bg-gray-200 h-screen w-full overflow-x-auto ">
       <div className="mb-4 p-2 flex bg-gray-300">
@@ -117,116 +92,20 @@ function BoardPage() {
       </div>
       <div className="relative mb-4 mt-auto flex justify-start">
         {board.columns.map((column) => (
-          <div
-            className="scrollCol overflow-y-auto flex-shrink-0 m-2 rounded-lg flex flex-col bg-gray-400 w-80 h-[80vh]"
+          <Column
             key={column}
-          >
-            {activeColumn === column && (
-              <div className="absolute w-80 bottom-0 z-10">
-                <form
-                  onSubmit={handleAddNote}
-                  className="flex flex-col justify-end bg-gray-300 p-6 w-full max-w-md rounded-b-lg"
-                >
-                  <div className="">
-                    <label>Title:</label>
-                    <input
-                      autoFocus
-                      type="text"
-                      name="title"
-                      value={newNote.title}
-                      onChange={handleInputChange}
-                      className="w-full border p-2 my-2"
-                    />
-                  </div>
-                  <div>
-                    <label>Description:</label>
-                    <textarea
-                      name="description"
-                      value={newNote.description}
-                      onChange={handleInputChange}
-                      className="w-full border p-2 my-2"
-                    />
-                  </div>
-                  <div className="flex justify-center">
-                    <button
-                      type="submit"
-                      className="w-1/3 bg-blue-500 text-white p-2 mt-2"
-                    >
-                      Add Note
-                    </button>
-                    <button
-                      onClick={() => {
-                        setActiveColumn(null);
-                        setNewNote({
-                          title: "",
-                          description: "",
-                          status: "Backlog",
-                        });
-                      }}
-                      className="w-1/3 ml-4 bg-blue-500 text-white p-2 mt-2"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </form>
-              </div>
-            )}
-
-            <div className="bg-gray-500 text-gray-200 sticky top-0">
-              <h2 className="m-2 sticky top-0">{column}</h2>
-            </div>
-
-            {notes
-              .filter((note) => note.status === column)
-              .map((note) => (
-                <div
-                  className=" self-center rounded-md w-8/9 bg-gray-200 text-gray-700 m-2 p-4 flex flex-col"
-                  key={note.id}
-                >
-                  {deleteMode && (
-                    <button
-                      className="self-center p-3 m-2 rounded-lg bg-red-200 text-red-500 font-bold"
-                      onClick={() => handleDeleteNote(note.id)}
-                    >
-                      DELETE NOTE
-                    </button>
-                  )}
-                  {changeStatusMode && (
-                    <select
-                      className="mb-2 -ml-1 border-1"
-                      value={note.status}
-                      onChange={(e) =>
-                        handleChangeStatus(note.id, e.target.value)
-                      }
-                    >
-                      <option value="" selected>
-                        Change Status
-                      </option>
-                      {board.columns
-                        .filter((column) => column !== note.status)
-                        .map((column) => (
-                          <option key={column} value={column}>
-                            {column}
-                          </option>
-                        ))}
-                    </select>
-                  )}
-                  <h3 className="font-bold mb-2">{note.title}</h3>
-                  <p className="break-words">{note.description}</p>
-                </div>
-              ))}
-
-            <div className=" p-3 sticky -bottom-1 bg-gray-500 mt-auto">
-              {activeColumn === null && (
-                <div
-                  onClick={() => handleAddNoteClick(column)}
-                  className="sticky bottom-0 rounded-lg p-2 mt-2 bg-gray-300 text-gray-600 hover:text-white cursor-pointer mt-auto"
-                >
-                  + Add Note
-                </div>
-              )}
-            </div>
-          </div>
+            column={column}
+            activeColumn={activeColumn}
+            setActiveColumn={setActiveColumn}
+            notes={notes}
+            setNotes={setNotes}
+            onAddNoteClick={handleAddNoteClick}
+            onDeleteNote={handleDeleteNote}
+            onChangeStatus={handleChangeStatus}
+            deleteMode={deleteMode}
+            changeStatusMode={changeStatusMode}
+            board={board}
+          />
         ))}
       </div>
     </div>
