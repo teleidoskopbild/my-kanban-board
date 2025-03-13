@@ -1,3 +1,5 @@
+import { useDraggable } from "@dnd-kit/core";
+
 function Note({
   note,
   board,
@@ -6,10 +8,19 @@ function Note({
   deleteMode,
   changeStatusMode,
 }) {
+  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
+    id: note.id,
+  });
   return (
     <div
+      ref={setNodeRef}
+      {...listeners}
+      {...attributes}
       className=" self-center rounded-md w-8/9 bg-gray-200 text-gray-700 m-2 p-4 flex flex-col"
       key={note.id}
+      style={{
+        opacity: isDragging ? 0.5 : 1,
+      }}
     >
       {deleteMode && (
         <button

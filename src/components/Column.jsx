@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Note from "./Note";
+import { useDroppable } from "@dnd-kit/core";
 
 function Column({
   column,
@@ -13,6 +14,9 @@ function Column({
   changeStatusMode,
   board,
 }) {
+  const { setNodeRef, isOver } = useDroppable({
+    id: column,
+  });
   const [newNote, setNewNote] = useState({
     title: "",
     description: "",
@@ -46,8 +50,10 @@ function Column({
 
   return (
     <div
+      ref={setNodeRef}
       className="scrollCol overflow-y-auto flex-shrink-0 m-2 rounded-lg flex flex-col bg-gray-400 w-80 h-[80vh]"
       key={column}
+      style={{ borderColor: isOver ? "#00ff00" : "black" }}
     >
       {activeColumn === column && (
         <div className="absolute w-80 bottom-0 z-10">
