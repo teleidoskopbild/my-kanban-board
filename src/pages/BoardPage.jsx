@@ -3,14 +3,13 @@ import { useEffect, useState } from "react";
 import Column from "../components/Column.jsx";
 import Note from "../components/Note.jsx";
 import { DndContext, DragOverlay } from "@dnd-kit/core";
+import TrashZone from "../components/TrashZone.jsx";
 
 function BoardPage() {
   const { boardId } = useParams();
   const [board, setBoard] = useState(null);
   const [notes, setNotes] = useState([]);
   const [activeColumn, setActiveColumn] = useState(null);
-  const [deleteMode, setDeleteMode] = useState(false);
-  const [changeStatusMode, setChangeStatusMode] = useState(false);
   const [newNote, setNewNote] = useState({
     title: "",
     description: "",
@@ -27,7 +26,16 @@ function BoardPage() {
   const handleDragEnd = (event) => {
     const { active, over } = event;
     setActiveNote(null);
-    if (over && active.id !== over.id) {
+    if (over && over.id === "trash-zone") {
+      const updatedNotes = notes.filter((note) => note.id !== active.id);
+      setNotes(updatedNotes);
+
+      const savedBoards = JSON.parse(localStorage.getItem("boards")) || [];
+      const updatedBoard = savedBoards.map((b) =>
+        b.id === board.id ? { ...b, notes: updatedNotes } : b
+      );
+      localStorage.setItem("boards", JSON.stringify(updatedBoard));
+    } else if (over && active.id !== over.id) {
       const updatedNotes = notes.map((note) =>
         note.id === active.id ? { ...note, status: over.id } : note
       );
@@ -61,63 +69,15 @@ function BoardPage() {
     setNewNote({ ...newNote, status: column });
   };
 
-  const handleToggleChangeColumnMode = () => {
-    setChangeStatusMode((prev) => !prev);
-    setDeleteMode(false);
-  };
-
-  const handleChangeStatus = (id, status) => {
-    const updatedNotes = notes.map((note) =>
-      note.id === id ? { ...note, status } : note
-    );
-    setNotes(updatedNotes);
-    const savedBoards = JSON.parse(localStorage.getItem("boards")) || [];
-    const updatedBoard = savedBoards.map((b) =>
-      b.id === board.id ? { ...b, notes: updatedNotes } : b
-    );
-    localStorage.setItem("boards", JSON.stringify(updatedBoard));
-  };
-
-  const handleToggleDeleteMode = () => {
-    setDeleteMode((prev) => !prev);
-    setChangeStatusMode(false);
-  };
-
-  const handleDeleteNote = (id) => {
-    const updatedNotes = notes.filter((note) => note.id !== id);
-    setNotes(updatedNotes);
-    const savedBoards = JSON.parse(localStorage.getItem("boards")) || [];
-    const updatedBoard = savedBoards.map((b) =>
-      b.id === board.id ? { ...b, notes: updatedNotes } : b
-    );
-    localStorage.setItem("boards", JSON.stringify(updatedBoard));
-  };
-
   return (
     <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
-      <div className="flex flex-col bg-gray-200 h-screen w-full overflow-x-auto ">
-        <div className="mb-4 p-2 flex bg-gray-300">
+      <div className="flex flex-col bg-white h-screen w-full overflow-x-auto ">
+        <div className="mb-4 p-2 flex bg-blue-300">
           <h1 className="ml-2 mr-10">Your Board: {board.name}</h1>
           <Link to="/"> Go Back</Link>
         </div>
 
-        <div className="ml-2 flex gap-2">
-          <button
-            onClick={handleToggleDeleteMode}
-            className="p-3 rounded-lg bg-gray-300"
-          >
-            {deleteMode ? "Exit Delete Mode" : "Enter Delete Mode"}
-          </button>
-          <button
-            onClick={handleToggleChangeColumnMode}
-            className="p-3 rounded-lg bg-gray-300"
-          >
-            {changeStatusMode
-              ? "Exit Change Status Mode"
-              : "Enter Change Status Mode"}
-          </button>
-        </div>
-        <div className="relative mb-4 mt-auto flex justify-start">
+        <div className="relative mb-4  flex justify-start">
           {board.columns.map((column) => (
             <Column
               key={column}
@@ -127,13 +87,10 @@ function BoardPage() {
               notes={notes}
               setNotes={setNotes}
               onAddNoteClick={handleAddNoteClick}
-              onDeleteNote={handleDeleteNote}
-              onChangeStatus={handleChangeStatus}
-              deleteMode={deleteMode}
-              changeStatusMode={changeStatusMode}
               board={board}
             />
           ))}
+          <TrashZone />
         </div>
       </div>
       <DragOverlay>
