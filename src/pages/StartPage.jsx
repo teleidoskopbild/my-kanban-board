@@ -19,7 +19,8 @@ function StartPage() {
         {
           id: 1,
           title: "Welcome Note",
-          description: "Hello, you can delete me!",
+          description:
+            "Hello, drag and drop me to other columns!! Or delete me!",
           status: "Backlog",
         },
       ],
@@ -85,7 +86,7 @@ function StartPage() {
             type="text"
             value={newBoardName}
             onChange={(e) => setNewBoardName(e.target.value)}
-            className="w-full p-2 rounded bg-gray-200 text-black border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="w-full p-2 rounded bg-gray-200 text-black border border-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400"
           />
           <button
             onClick={handleCreateBoard}
