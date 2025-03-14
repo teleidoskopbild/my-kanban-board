@@ -37,7 +37,7 @@ function StartPage() {
     localStorage.setItem("boards", JSON.stringify(updatedBoards));
   };
   return (
-    <div className="flex flex-col items-center bg-blue-200 text-gray-900 w-full h-screen p-4 justify-center">
+    <div className="flex flex-col items-center bg-white text-gray-900 w-full h-screen p-4 justify-center">
       <h1 className="text-3xl font-bold mt-4">MY KANBAN BOARD</h1>
       <p className="text-lg mt-2">
         Organize your tasks efficiently with personalized boards.

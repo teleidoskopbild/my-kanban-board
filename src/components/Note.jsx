@@ -9,7 +9,7 @@ function Note({ note }) {
       ref={setNodeRef}
       {...listeners}
       {...attributes}
-      className=" self-center w-8/9 bg-gray-200 text-gray-300 m-2 flex flex-col"
+      className=" self-center w-8/9 bg-gray-200 text-gray-300 m-2 flex flex-col border-1 border-black"
       key={note.id}
       style={{
         opacity: isDragging ? 0.5 : 1,
