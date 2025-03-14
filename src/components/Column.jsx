@@ -33,9 +33,12 @@ function Column({
 
   const handleAddNote = (e) => {
     e.preventDefault();
+
+    const randomString = Math.random().toString(36).substring(2, 6);
+
     const newNoteObj = {
       ...newNote,
-      id: notes.length + 1,
+      id: `${notes.length + 1}-${randomString}`,
       boardId: board.id,
     };
     const updatedNotes = [...notes, newNoteObj];
@@ -56,7 +59,7 @@ function Column({
       style={{ borderColor: isOver ? "#0000ff" : "black" }}
     >
       {activeColumn === column && (
-        <div className="sticky w-80 bottom-0 z-10">
+        <div className="sticky w-80 top-0 z-10">
           <form
             onSubmit={handleAddNote}
             className="flex flex-col justify-end bg-white p-6 w-full"
