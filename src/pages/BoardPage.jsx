@@ -16,6 +16,11 @@ function BoardPage() {
     status: "",
   });
   const [activeNote, setActiveNote] = useState(null);
+  const [filterNotes, setFilterNotes] = useState("");
+
+  const filteredNotes = notes.filter((note) =>
+    note.title.toLowerCase().includes(filterNotes.toLowerCase())
+  );
 
   const handleDragStart = (event) => {
     const { active } = event;
@@ -76,6 +81,15 @@ function BoardPage() {
           <h1 className="ml-2 mr-10">Your Board: {board.name}</h1>
           <Link to="/"> Go Back</Link>
         </div>
+        <div className="mb-4 p-2">
+          <input
+            type="text"
+            placeholder="Search Notes..."
+            value={filterNotes}
+            onChange={(e) => setFilterNotes(e.target.value)}
+            className="p-2 border rounded mb-4"
+          />
+        </div>
 
         <div className="relative mb-4  flex justify-start">
           {board.columns.map((column) => (
@@ -84,7 +98,7 @@ function BoardPage() {
               column={column}
               activeColumn={activeColumn}
               setActiveColumn={setActiveColumn}
-              notes={notes}
+              notes={filteredNotes}
               setNotes={setNotes}
               onAddNoteClick={handleAddNoteClick}
               board={board}
