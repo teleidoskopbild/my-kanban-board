@@ -49,6 +49,11 @@ function Column({
     );
     localStorage.setItem("boards", JSON.stringify(updatedBoard));
     setActiveColumn(null);
+    setNewNote({
+      title: "",
+      description: "",
+      status: column,
+    });
   };
 
   return (
