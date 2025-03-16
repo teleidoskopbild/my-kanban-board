@@ -63,8 +63,46 @@ function Column({
       key={column}
       style={{ borderColor: isOver ? "#0000ff" : "black" }}
     >
-      {activeColumn === column && (
-        <div className="sticky w-80 top-0 z-10">
+      <div className="text-center p-2 bg-blue-500 text-gray-200 sticky top-0">
+        <h2 className="p-2 sticky top-0">
+          <span className="ml-2 font-bold">{column} </span>{" "}
+          <span className="bg-blue-600 ml-2 px-2 py-1 rounded-lg">
+            {notes.filter((note) => note.status === column).length}
+          </span>
+        </h2>
+      </div>
+
+      {notes
+        .filter((note) => note.status === column)
+        .map((note) => (
+          <Note
+            key={note.id}
+            note={note}
+            onDelete={onDeleteNote}
+            deleteMode={deleteMode}
+            board={board}
+          />
+        ))}
+
+      <div
+        className={`p-3 sticky -bottom-1 mt-auto ${
+          activeColumn === null
+            ? "bg-blue-500"
+            : activeColumn === column
+            ? "bg-white"
+            : ""
+        }`}
+      >
+        {activeColumn === null && (
+          <div
+            onClick={() => setActiveColumn(column)}
+            className="sticky bottom-0 rounded-lg p-2 mt-2 bg-white text-gray-600 hover:text-black cursor-pointer mt-auto"
+          >
+            + Add Note
+          </div>
+        )}
+
+        {activeColumn === column && (
           <form
             onSubmit={handleAddNote}
             className="flex flex-col justify-end bg-white p-6 w-full"
@@ -111,38 +149,6 @@ function Column({
               </button>
             </div>
           </form>
-        </div>
-      )}
-
-      <div className="text-center p-2 bg-blue-500 text-gray-200 sticky top-0">
-        <h2 className="p-2 sticky top-0">
-          <span className="ml-2 font-bold">{column} </span>{" "}
-          <span className="bg-blue-600 ml-2 px-2 py-1 rounded-lg">
-            {notes.filter((note) => note.status === column).length}
-          </span>
-        </h2>
-      </div>
-
-      {notes
-        .filter((note) => note.status === column)
-        .map((note) => (
-          <Note
-            key={note.id}
-            note={note}
-            onDelete={onDeleteNote}
-            deleteMode={deleteMode}
-            board={board}
-          />
-        ))}
-
-      <div className=" p-3 sticky -bottom-1 bg-blue-500 mt-auto">
-        {activeColumn === null && (
-          <div
-            onClick={() => setActiveColumn(column)}
-            className="sticky bottom-0 rounded-lg p-2 mt-2 bg-white text-gray-600 hover:text-black cursor-pointer mt-auto"
-          >
-            + Add Note
-          </div>
         )}
       </div>
     </div>
