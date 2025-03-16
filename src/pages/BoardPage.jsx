@@ -17,6 +17,11 @@ function BoardPage() {
   });
   const [activeNote, setActiveNote] = useState(null);
   const [filterNotes, setFilterNotes] = useState("");
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+  };
 
   const filteredNotes = notes.filter((note) =>
     note.title.toLowerCase().includes(filterNotes.toLowerCase())
@@ -76,18 +81,44 @@ function BoardPage() {
 
   return (
     <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
-      <div className="flex flex-col bg-white h-screen w-full overflow-x-auto ">
-        <div className="mb-4 p-2 flex bg-blue-300">
-          <h1 className="ml-2 mr-10">Your Board: {board.name}</h1>
-          <Link to="/"> Go Back</Link>
+      <div className="flex flex-col h-screen w-full">
+        <div className="mb-4 p-2 bg-blue-600 flex text-white justify-between w-full">
+          <button onClick={toggleMenu} className="cursor-pointer">
+            <div className="w-6 h-1 bg-white mb-1"></div>
+            <div className="w-6 h-1 bg-white mb-1"></div>
+            <div className="w-6 h-1 bg-white mb-1"></div>
+          </button>
+          {menuOpen && (
+            <div className="absolute top-0 left-0 w-full bg-blue-600 p-4">
+              <ul>
+                <li>
+                  <button
+                    onClick={toggleMenu}
+                    className="cursor-pointer hover:text-yellow-400"
+                  >
+                    CLOSE
+                  </button>
+                </li>
+                <li>
+                  <Link to="/" className="hover:text-yellow-400">
+                    BACK TO OVERVIEW
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          )}
+
+          <h1 className="">Current Board: {board.name}</h1>
+          <h2 className="">MY KANBAN BOARD</h2>
         </div>
+
         <div className="mb-4 p-2">
           <input
             type="text"
             placeholder="Search Notes..."
             value={filterNotes}
             onChange={(e) => setFilterNotes(e.target.value)}
-            className="p-2 border rounded mb-4"
+            className="p-2 border rounded mb-4 w-full"
           />
         </div>
 

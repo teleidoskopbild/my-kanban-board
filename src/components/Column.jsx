@@ -59,7 +59,7 @@ function Column({
   return (
     <div
       ref={setNodeRef}
-      className="relative scrollCol overflow-y-auto flex-shrink-0 m-3  flex flex-col bg-gray-100 w-80 h-[80vh] border-1"
+      className="relative scrollCol overflow-y-auto flex flex-shrink-0 m-3 flex-col bg-gray-100 lg:w-60 xl:w-80 h-[80vh] border-1"
       key={column}
       style={{ borderColor: isOver ? "#0000ff" : "black" }}
     >

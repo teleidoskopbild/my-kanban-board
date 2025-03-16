@@ -8,7 +8,7 @@ function TrashZone() {
   return (
     <div
       ref={setNodeRef}
-      className="flex-shrink-0 m-3 flex flex-col items-center justify-center bg-gray-100 w-80 h-[20vh] border-1"
+      className="flex-shrink-0 m-3 flex flex-col items-center justify-center bg-gray-100 lg:w-60 xl:w-80 h-[20vh] border-1"
     >
       <h1 className="text-center">Trash Zone</h1>
       <p className="text-center">Drag and Drop Elements here to Delete them</p>

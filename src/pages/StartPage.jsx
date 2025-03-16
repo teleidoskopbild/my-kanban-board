@@ -42,7 +42,7 @@ function StartPage() {
       <p className="text-lg mt-2">
         Organize your tasks efficiently with personalized boards.
       </p>
-      <div className="mt-6 w-full max-w-md bg-blue-400 p-4 rounded-lg shadow-lg">
+      <div className="mt-6 w-full max-w-md bg-blue-500 p-4 rounded-lg shadow-lg">
         <h2 className="text-xl text-center font-semibold">
           YOUR EXISTING BOARDS
         </h2>
@@ -76,7 +76,7 @@ function StartPage() {
           ))}
         </ul>
       </div>
-      <div className="mt-6 w-full max-w-md bg-blue-400 p-4 rounded-lg shadow-lg">
+      <div className="mt-6 w-full max-w-md bg-blue-500 p-4 rounded-lg shadow-lg">
         <h2 className="text-xl font-semibold text-center">Create New Board</h2>
         <p className="text-sm mt-1 text-center">
           Enter a name and create a new board for your tasks.
